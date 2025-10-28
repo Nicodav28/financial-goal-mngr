@@ -6,19 +6,18 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class User extends Model
+class Contribution extends Model
 {
     use HasUuids, SoftDeletes;
 
-    protected $table = 'users';
+    protected $table = 'contributions';
 
     protected $fillable = [
-        'name',
-        'email',
-        'birth_date',
-        'gender',
-        'email_verified_at',
-        'password'
+        'user_id',
+        'goal_id',
+        'currency_id',
+        'amount',
+        'note',
     ];
 
     protected $hidden = [

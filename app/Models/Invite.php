@@ -6,23 +6,26 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class User extends Model
+class Invite extends Model
 {
     use HasUuids, SoftDeletes;
 
-    protected $table = 'users';
+    protected $table = 'invites';
 
     protected $fillable = [
-        'name',
-        'email',
-        'birth_date',
-        'gender',
-        'email_verified_at',
-        'password'
+        'inviter_id',
+        'invitee_id',
+        'group_id',
+        'invite_status',
+        'invite_code'
     ];
 
     protected $hidden = [
         'created_at',
         'updated_at',
     ];
+
+    // protected $casts = [
+    //     'invite_status' => 'integer',
+    // ];
 }

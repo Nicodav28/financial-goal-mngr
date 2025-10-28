@@ -6,19 +6,16 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class User extends Model
+class Group extends Model
 {
     use HasUuids, SoftDeletes;
 
-    protected $table = 'users';
+    protected $table = 'groups';
 
     protected $fillable = [
         'name',
-        'email',
-        'birth_date',
-        'gender',
-        'email_verified_at',
-        'password'
+        'description',
+        'created_by',
     ];
 
     protected $hidden = [
