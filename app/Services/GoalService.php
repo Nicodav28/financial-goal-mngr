@@ -13,7 +13,7 @@ class GoalService
 
     public function getAllGoals()
     {
-        return $this->goalRepository->findAll();
+        return $this->goalRepository->findAll()->load('group');
     }
 
     public function getGoalById($id)
@@ -34,5 +34,19 @@ class GoalService
     public function deleteGoal($id)
     {
         return $this->goalRepository->delete($id);
+    }
+
+    public function linkGoalToGroup($goalId, $groupId)
+    {
+        $goal = $this->goalRepository->findById($goalId);
+
+        if (!$goal) {
+            return response()->json(['error' => 'Goal not found'], 404);
+        }
+
+        $goal->group_id = $groupId;
+        $goal->save();
+
+        return $goal->load('group');
     }
 }

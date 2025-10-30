@@ -35,4 +35,20 @@ class InviteService
     {
         return $this->inviteRepository->delete($id);
     }
+
+    public function acceptInvite($inviteCode)
+    {
+        $invite = $this->inviteRepository->findByInviteCode($inviteCode);
+
+        if (!$invite) {
+            throw new \Exception('Invalid invite code.');
+        }
+
+        if ($invite->invite_status !== 1) {
+            throw new \Exception('Invite has already been used or is inactive.');
+        }
+
+        return $this->inviteRepository->update($invite->id, ['invite_status' => 2]);
+    }
+
 }

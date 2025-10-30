@@ -36,4 +36,9 @@ class GroupController extends Controller
     {
         return $this->groupService->deleteGroup($id);
     }
+
+    // public function leaveGroup($id)
+    // {
+    //     return $this->groupService->leaveGroup($id);
+    // }
 }

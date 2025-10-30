@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Invite;
 use App\Repositories\Contracts\GroupRepositoryInterface;
 
 class GroupService
@@ -23,7 +24,11 @@ class GroupService
 
     public function createGroup(array $data)
     {
-        return $this->groupRepository->create($data);
+        $group = $this->groupRepository->create($data);
+
+        $group->users()->attach($data['created_by']);
+
+        return $group->load('users');
     }
 
     public function updateGroup($id, array $data)
@@ -34,5 +39,19 @@ class GroupService
     public function deleteGroup($id)
     {
         return $this->groupRepository->delete($id);
+    }
+
+    public function joinGroupUsingInvite(Invite $invite)
+    {
+        $group = $invite->group;
+        $userId = $invite->invitee_id;
+
+        if ($group->users()->where('user_id', $userId)->exists()) {
+            throw new \Exception("User is already a member of the group.");
+        }
+
+        $group->users()->attach($userId);
+
+        return $group->load('users');
     }
 }

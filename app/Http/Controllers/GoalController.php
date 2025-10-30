@@ -36,4 +36,15 @@ class GoalController extends Controller
     {
         return $this->goalService->deleteGoal($id);
     }
+
+    public function linkGoalToGroup(Request $request, $goalId, $groupId)
+    {
+        try {
+            $goalWithLinkedGroup = $this->goalService->linkGoalToGroup($goalId, $groupId);
+
+            return response()->json($goalWithLinkedGroup, 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Failed to link goal to group: ' . $e->getMessage()], 500);
+        }
+    }
 }

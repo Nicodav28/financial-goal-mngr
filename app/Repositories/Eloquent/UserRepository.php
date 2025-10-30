@@ -12,7 +12,7 @@ class UserRepository implements UserRepositoryInterface
         return User::all();
     }
 
-    public function find(int $id)
+    public function find(string $id)
     {
         return User::findOrFail($id);
     }
@@ -22,14 +22,14 @@ class UserRepository implements UserRepositoryInterface
         return User::create($data);
     }
 
-    public function update(int $id, array $data)
+    public function update(string $id, array $data)
     {
         $user = User::findOrFail($id);
         $user->update($data);
         return $user;
     }
 
-    public function delete(int $id)
+    public function delete(string $id)
     {
         return User::destroy($id);
     }

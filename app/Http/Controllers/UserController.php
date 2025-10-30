@@ -22,7 +22,7 @@ class UserController extends Controller
         }
     }
 
-    public function show($id)
+    public function show(string $id)
     {
         try {
             $user = $this->userService->getUserById($id);
@@ -38,6 +38,8 @@ class UserController extends Controller
             $user = $this->userService->createUser($request->all());
             return response()->json($user, 201);
         } catch (\Exception $e) {
+            dd($e);
+
             return response()->json(['error' => 'Failed to create user'], 500);
         }
     }

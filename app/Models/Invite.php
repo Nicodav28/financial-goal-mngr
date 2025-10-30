@@ -13,9 +13,9 @@ class Invite extends Model
     protected $table = 'invites';
 
     protected $fillable = [
-        'inviter_id',
-        'invitee_id',
-        'group_id',
+        'inviter_id', //usuario que invita
+        'invitee_id', //usuario invitado
+        'group_id', //grupo al que se invita
         'invite_status',
         'invite_code'
     ];
@@ -25,7 +25,18 @@ class Invite extends Model
         'updated_at',
     ];
 
-    // protected $casts = [
-    //     'invite_status' => 'integer',
-    // ];
+    public function inviter()
+    {
+        return $this->belongsTo(User::class, 'inviter_id', 'id');
+    }
+
+    public function invitee()
+    {
+        return $this->belongsTo(User::class, 'invitee_id', 'id');
+    }
+
+    public function group()
+    {
+        return $this->belongsTo(Group::class, 'group_id', 'id');
+    }
 }

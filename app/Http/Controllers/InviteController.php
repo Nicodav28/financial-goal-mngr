@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\GroupService;
 use App\Services\InviteService;
 use Illuminate\Http\Request;
 
 class InviteController extends Controller
 {
-    public function __construct(private readonly InviteService $inviteService)
+    public function __construct(private readonly InviteService $inviteService, private readonly GroupService $groupService)
     {
         //
     }
@@ -35,5 +36,17 @@ class InviteController extends Controller
     public function destroy($id)
     {
         return $this->inviteService->deleteInvite($id);
+    }
+
+    public function acceptInvite($inviteCode)
+    {
+        try {
+            $invite = $this->inviteService->acceptInvite($inviteCode);
+            $joinedGroup = $this->groupService->joinGroupUsingInvite($invite);
+
+            return response()->json($joinedGroup, 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Failed to accept invite: ' . $e->getMessage()], 500);
+        }
     }
 }
