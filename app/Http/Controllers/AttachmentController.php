@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\AttachmentService;
-use Illuminate\Http\Request;
+    use Illuminate\Http\Request;
 
 class AttachmentController extends Controller
 {
@@ -24,7 +24,7 @@ class AttachmentController extends Controller
 
     public function store(Request $request)
     {
-        return $this->attachmentService->createAttachment($request->all());
+        return $this->attachmentService->createAttachment($request);
     }
 
     public function update(Request $request, $id)

@@ -9,12 +9,12 @@ class ContributionRepository implements ContributionRepositoryInterface
 {
     public function findAll()
     {
-        return Contribution::all();
+        return Contribution::with(['user', 'goal', 'currency'])->get();
     }
 
     public function findById($id)
     {
-        return Contribution::findOrFail($id);
+        return Contribution::with(['user', 'goal', 'currency'])->findOrFail($id);
     }
 
     public function create(array $data)

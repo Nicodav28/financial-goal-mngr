@@ -1,6 +1,10 @@
 <?php
 
+use App\Http\Controllers\AttachmentController;
+use App\Http\Controllers\ContributionController;
+use App\Http\Controllers\GoalController;
 use App\Http\Controllers\GroupController;
+use App\Http\Controllers\InviteController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -26,33 +30,39 @@ Route::group(['prefix' => 'group'], function () {
 });
 
 Route::group(['prefix' => 'invite'], function () {
-    Route::get('/', [App\Http\Controllers\InviteController::class, 'index']);
-    Route::post('/', [App\Http\Controllers\InviteController::class, 'store']);
-    Route::get('/{id}', [App\Http\Controllers\InviteController::class, 'show']);
-    Route::put('/{id}', [App\Http\Controllers\InviteController::class, 'update']);
-    Route::delete('/{id}', [App\Http\Controllers\InviteController::class, 'destroy']);
+    Route::get('/', [InviteController::class, 'index']);
+    Route::post('/', [InviteController::class, 'store']);
+    Route::get('/{id}', [InviteController::class, 'show']);
+    Route::put('/{id}', [InviteController::class, 'update']);
+    Route::delete('/{id}', [InviteController::class, 'destroy']);
 
-    Route::post('/accept/{inviteCode}', [App\Http\Controllers\InviteController::class, 'acceptInvite']);
+    Route::post('/accept/{inviteCode}', [InviteController::class, 'acceptInvite']);
 });
 
 Route::group(['prefix' => 'goal'], function () {
-    Route::get('/', [App\Http\Controllers\GoalController::class, 'index']);
-    Route::post('/', [App\Http\Controllers\GoalController::class, 'store']);
-    Route::get('/{id}', [App\Http\Controllers\GoalController::class, 'show']);
-    Route::put('/{id}', [App\Http\Controllers\GoalController::class, 'update']);
-    Route::delete('/{id}', [App\Http\Controllers\GoalController::class, 'destroy']);
+    Route::get('/', [GoalController::class, 'index']);
+    Route::post('/', [GoalController::class, 'store']);
+    Route::get('/{id}', [GoalController::class, 'show']);
+    Route::put('/{id}', [GoalController::class, 'update']);
+    Route::delete('/{id}', [GoalController::class, 'destroy']);
 
-    Route::post('/{goalId}/link-group/{groupId}', [App\Http\Controllers\GoalController::class, 'linkGoalToGroup']);
+    Route::post('/{goalId}/link-group/{groupId}', [GoalController::class, 'linkGoalToGroup']);
 });
 
 Route::group(['prefix' => 'contribution'], function () {
-    Route::get('/', [App\Http\Controllers\ContributionController::class, 'index']);
-    Route::post('/', [App\Http\Controllers\ContributionController::class, 'store']);
-    Route::get('/{id}', [App\Http\Controllers\ContributionController::class, 'show']);
-    Route::put('/{id}', [App\Http\Controllers\ContributionController::class, 'update']);
-    Route::delete('/{id}', [App\Http\Controllers\ContributionController::class, 'destroy']);
+    Route::get('/', [ContributionController::class, 'index']);
+    Route::post('/', [ContributionController::class, 'store']);
+    Route::get('/{id}', [ContributionController::class, 'show']);
+    Route::put('/{id}', [ContributionController::class, 'update']);
+    Route::delete('/{id}', [ContributionController::class, 'destroy']);
+});
 
-    // Route::post('/{contributionId}/link-goal/{goalId}', [App\Http\Controllers\ContributionController::class, 'linkContributionToGoal']);
+Route::group(['prefix' => 'attachment'], function () {
+    Route::get('/', [AttachmentController::class, 'index']);
+    Route::post('/', [AttachmentController::class, 'store']);
+    Route::get('/{id}', [AttachmentController::class, 'show']);
+    Route::put('/{id}', [AttachmentController::class, 'update']);
+    Route::delete('/{id}', [AttachmentController::class, 'destroy']);
 });
 
 

@@ -6,19 +6,15 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Attachment extends Model
+class Currency extends Model
 {
-        use HasUuids, SoftDeletes;
+    use HasUuids, SoftDeletes;
 
-    protected $table = 'attachments';
+    protected $table = 'currencies';
 
     protected $fillable = [
-        'contribution_id',
-        'file_path',
-        'original_name',
-        'mime_type',
-        'size',
-        'description',
+        'name',
+        'symbol',
     ];
 
     protected $hidden = [

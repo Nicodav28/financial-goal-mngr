@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Illuminate\Http\Request;
 use App\Repositories\Contracts\AttachmentRepositoryInterface;
 
 class AttachmentService
@@ -21,8 +22,21 @@ class AttachmentService
         return $this->attachmentRepository->findById($id);
     }
 
-    public function createAttachment(array $data)
+    public function createAttachment(Request $request)
     {
+        $file = $request->file('file');
+        //todo: hacer que el path corresponda a el contribution_id y user_id ej user_1/contribution_5/filename.JPG
+        $path = $file->store('attachments', 'public');
+
+        $data = [
+            'file_path' => $path,
+            'original_name' => $file->getClientOriginalName(),
+            'mime_type'    => $file->getClientMimeType(),
+            'size'         => $file->getSize(),
+            'description'  => $request->input('description'),
+            'contribution_id' => $request->input('contribution_id'),
+        ];
+
         return $this->attachmentRepository->create($data);
     }
 

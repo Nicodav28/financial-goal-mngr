@@ -23,5 +23,23 @@ class Contribution extends Model
     protected $hidden = [
         'created_at',
         'updated_at',
+        'user_id',
+        'goal_id',
+        'currency_id'
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function goal()
+    {
+        return $this->belongsTo(Goal::class);
+    }
+
+    public function currency()
+    {
+        return $this->belongsTo(Currency::class);
+    }
 }

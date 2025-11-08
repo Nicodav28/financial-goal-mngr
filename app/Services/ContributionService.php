@@ -3,10 +3,11 @@
 namespace App\Services;
 
 use App\Repositories\Contracts\ContributionRepositoryInterface;
+use App\Repositories\Contracts\GoalRepositoryInterface;
 
 class ContributionService
 {
-    public function __construct(private readonly ContributionRepositoryInterface $contributionRepository)
+    public function __construct(private readonly ContributionRepositoryInterface $contributionRepository, private readonly GoalRepositoryInterface $goalRepository)
     {
         //
     }
@@ -23,6 +24,13 @@ class ContributionService
 
     public function createContribution(array $data)
     {
+        $goal = $this->goalRepository->findById($data['goal_id']);
+
+        if (!$goal) {
+            throw new \Exception('Goal not found');
+        }
+        // dd($goal->participants()->get()->toArray());
+
         return $this->contributionRepository->create($data);
     }
 
