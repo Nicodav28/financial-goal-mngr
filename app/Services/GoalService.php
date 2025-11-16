@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Repositories\Contracts\GoalRepositoryInterface;
+use Illuminate\Support\Facades\Auth;
 
 class GoalService
 {
@@ -13,7 +14,7 @@ class GoalService
 
     public function getAllGoals()
     {
-        return $this->goalRepository->findAll()->load('group');
+        return $this->goalRepository->findAll(Auth::user()->id)->load('group', 'currency', 'owner');
     }
 
     public function getGoalById($id)
@@ -23,6 +24,7 @@ class GoalService
 
     public function createGoal(array $data)
     {
+        $data['owner_id'] = Auth::User()->id;
         return $this->goalRepository->create($data);
     }
 

@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Dtos\AuthTokenDTO;
+use App\Models\Token;
 use App\Models\User;
 use App\Repositories\Contracts\IAuthTokenRepository;
 use Auth;
@@ -105,9 +106,13 @@ class JwtService
         }
     }
 
-    public function invalidateToken(string $token): bool
+    public function invalidateToken(Token $token): bool
     {
-        return true;
+        try {
+            return $this->authTokenRepository->revokeToken($token->id);
+        } catch (\Throwable $th) {
+            throw new RuntimeException('JWT validation failed!', 0, $th);
+        }
     }
 
     public function refreshToken(string $token): string

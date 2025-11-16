@@ -4,7 +4,7 @@ namespace App\Repositories\Contracts;
 
 interface GoalRepositoryInterface
 {
-    public function findAll();
+    public function findAll(string $userId);
 
     public function findById($id);
 

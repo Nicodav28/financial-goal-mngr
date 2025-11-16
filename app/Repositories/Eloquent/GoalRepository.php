@@ -7,9 +7,15 @@ use App\Repositories\Contracts\GoalRepositoryInterface;
 
 class GoalRepository implements GoalRepositoryInterface
 {
-    public function findAll()
+    public function findAll(string $userId)
     {
-        return Goal::all();
+        return Goal::withSum('contributions', 'amount')
+            ->where('owner_id', $userId)
+            ->get()
+            ->map(function ($goal) {
+                $goal->contributions_sum_amount = $goal->contributions_sum_amount ?? 0;
+                return $goal;
+            });
     }
 
     public function findById($id)

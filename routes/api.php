@@ -20,7 +20,7 @@ Route::get('/test', function () {
 //todo: one-time code email verification when uncommon actions are performed (e.g., login from new device or location) must be implemented too.
 Route::group(['prefix' => 'auth'], function () {
     Route::post('/login', [AuthController::class, 'login']);
-    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::post('/logout', [AuthController::class, 'logout'])->middleware(ValidateAuthToken::class);
     Route::post('/password/forgot', [AuthController::class, 'forgotPassword']);
     Route::post('/password/reset', [AuthController::class, 'resetPassword']);
 });
@@ -51,7 +51,7 @@ Route::group(['prefix' => 'invite'], function () {
     Route::post('/accept/{inviteCode}', [InviteController::class, 'acceptInvite']);
 });
 
-Route::group(['prefix' => 'goal'], function () {
+Route::group(['prefix' => 'goals',  'middleware' => [ValidateAuthToken::class]], function () {
     Route::get('/', [GoalController::class, 'index']);
     Route::post('/', [GoalController::class, 'store']);
     Route::get('/{id}', [GoalController::class, 'show']);

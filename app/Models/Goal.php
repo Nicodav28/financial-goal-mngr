@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Goal extends Model
@@ -28,6 +29,9 @@ class Goal extends Model
     protected $hidden = [
         'created_at',
         'updated_at',
+        'currency_id',
+        'group_id',
+        'owner_id'
     ];
 
     // public function currency()
@@ -52,5 +56,14 @@ class Goal extends Model
         }
 
         return $this->owner();
+    }
+
+    public function currency(){
+        return $this->hasOne(Currency::class, 'id', 'currency_id');
+    }
+
+    public function contributions(): HasMany
+    {
+        return $this->hasMany(Contribution::class, 'goal_id');
     }
 }

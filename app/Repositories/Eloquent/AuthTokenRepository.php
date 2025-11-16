@@ -41,7 +41,6 @@ class AuthTokenRepository implements IAuthTokenRepository
 
         $tokenModel->update([
             'revoked_at'   => Carbon::now(),
-            'expires_at'   => Carbon::now(),
         ]);
 
         return true;

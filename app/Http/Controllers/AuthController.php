@@ -35,8 +35,9 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        $this->jwtService->invalidateToken($request->bearerToken());
-        return response()->json([ 'message' => 'Logout successful' ], 200);
+        $this->jwtService->invalidateToken($request->attributes->get('auth_token'));
+
+        return ResponseHandler::response(200, 'Auth:logout', 'Logout successful', null);
     }
 
     public function forgotPassword(Request $request)
