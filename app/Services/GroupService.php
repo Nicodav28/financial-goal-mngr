@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Invite;
 use App\Repositories\Contracts\GroupRepositoryInterface;
+use Auth;
 
 class GroupService
 {
@@ -24,8 +25,8 @@ class GroupService
 
     public function createGroup(array $data)
     {
+        $data['created_by'] = Auth::user()->id;
         $group = $this->groupRepository->create($data);
-
         $group->users()->attach($data['created_by']);
 
         return $group->load('users');

@@ -2,7 +2,9 @@
 
 namespace App\Services;
 
+use App\Models\User;
 use App\Repositories\Contracts\UserRepositoryInterface;
+use Illuminate\Support\Facades\Hash;
 
 class UserService
 {
@@ -32,6 +34,7 @@ class UserService
     public function createUser(array $data)
     {
         try {
+            $data['password'] = Hash::make($data['password'], ['rounds' => 12]);
             return $this->userRepository->create($data);
         } catch (\Exception $e) {
             throw new \Exception('Error creating user: ' . $e->getMessage());
@@ -53,6 +56,21 @@ class UserService
             $this->userRepository->delete($id);
         } catch (\Exception $e) {
             throw new \Exception('Error deleting user: ' . $e->getMessage());
+        }
+    }
+
+    public function validateLoginData(array $data): User|null
+    {
+        try {
+            $user = $this->userRepository->findByEmail($data['email']);
+
+            if (!$user || !Hash::check($data['password'], $user->password)) {
+                return null;
+            }
+
+            return $user;
+        } catch (\Exception $e) {
+            throw new \Exception('Error validating login data: ' . $e->getMessage());
         }
     }
 }

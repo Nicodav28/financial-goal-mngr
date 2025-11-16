@@ -65,7 +65,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'America/Bogota',
 
     /*
     |--------------------------------------------------------------------------
@@ -123,4 +123,11 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    'user_auth' => [
+        'jwt_validity_time' => env('JWT_VALIDITY_TIME'),
+        'jwt_type_time' => env('TYPE_TIME'),
+        'private_key_passphrase' => env('PRIVATE_KEY_PASSPHRASE_USER'),
+        'public_key_path' => env('PUBLIC_AUTH_KEY_PATH_USER') ,
+        'private_key_path' => env('PRIVATE_AUTH_KEY_PATH_USER')
+    ]
 ];
