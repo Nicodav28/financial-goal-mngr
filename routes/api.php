@@ -7,7 +7,9 @@ use App\Http\Controllers\GoalController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\InviteController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ProgressController;
 use App\Http\Middleware\ValidateAuthToken;
+use App\Http\Middleware\EnsureGoalOwner;
 use Illuminate\Support\Facades\Route;
 
 
@@ -25,6 +27,7 @@ Route::group(['prefix' => 'auth'], function () {
     Route::post('/password/reset', [AuthController::class, 'resetPassword']);
 });
 
+// User routes
 Route::group(['prefix' => 'user'], function () {
     Route::get('/', [UserController::class, 'index']);
     Route::post('/', [UserController::class, 'store']);
@@ -33,6 +36,7 @@ Route::group(['prefix' => 'user'], function () {
     Route::delete('/{id}', [UserController::class, 'destroy']);
 });
 
+// Group routes (protected)
 Route::group(['prefix' => 'group', 'middleware' => [ValidateAuthToken::class]], function () {
     Route::get('/', [GroupController::class, 'index']);
     Route::post('/', [GroupController::class, 'store']);
@@ -41,26 +45,31 @@ Route::group(['prefix' => 'group', 'middleware' => [ValidateAuthToken::class]], 
     Route::delete('/{id}', [GroupController::class, 'destroy']);
 });
 
+// Invite routes
 Route::group(['prefix' => 'invite'], function () {
     Route::get('/', [InviteController::class, 'index']);
     Route::post('/', [InviteController::class, 'store']);
     Route::get('/{id}', [InviteController::class, 'show']);
     Route::put('/{id}', [InviteController::class, 'update']);
-    Route::delete('/{id}', [InviteController::class, 'destroy']);
-
+    Route::delete('/{id}', [ InviteController::class, 'destroy' ]);
     Route::post('/accept/{inviteCode}', [InviteController::class, 'acceptInvite']);
 });
 
-Route::group(['prefix' => 'goals',  'middleware' => [ValidateAuthToken::class]], function () {
+// Goal routes (protected, ownership middleware for modify actions)
+Route::group([ 'prefix' => 'goals', 'middleware' => [ ValidateAuthToken::class] ], function () {
     Route::get('/', [GoalController::class, 'index']);
     Route::post('/', [GoalController::class, 'store']);
     Route::get('/{id}', [GoalController::class, 'show']);
-    Route::put('/{id}', [GoalController::class, 'update']);
-    Route::delete('/{id}', [GoalController::class, 'destroy']);
-
-    Route::post('/{goalId}/link-group/{groupId}', [GoalController::class, 'linkGoalToGroup']);
+    Route::put('/{id}', [ GoalController::class, 'update' ])->middleware(EnsureGoalOwner::class);
+    Route::delete('/{id}', [ GoalController::class, 'destroy' ])->middleware(EnsureGoalOwner::class);
+    Route::post('/{goalId}/link-group/{groupId}', [ GoalController::class, 'linkGoalToGroup' ])->middleware(EnsureGoalOwner::class);
+    // Progress endpoints
+    Route::get('/{goalId}/progress', [ ProgressController::class, 'index' ]);
+    Route::post('/{goalId}/progress', [ ProgressController::class, 'store' ]);
+    Route::get('/{goalId}/progress/export', [ ProgressController::class, 'exportCsv' ]);
 });
 
+// Contribution routes
 Route::group(['prefix' => 'contribution'], function () {
     Route::get('/', [ContributionController::class, 'index']);
     Route::post('/', [ContributionController::class, 'store']);
@@ -69,6 +78,7 @@ Route::group(['prefix' => 'contribution'], function () {
     Route::delete('/{id}', [ContributionController::class, 'destroy']);
 });
 
+// Attachment routes
 Route::group(['prefix' => 'attachment'], function () {
     Route::get('/', [AttachmentController::class, 'index']);
     Route::post('/', [AttachmentController::class, 'store']);
@@ -76,6 +86,3 @@ Route::group(['prefix' => 'attachment'], function () {
     Route::put('/{id}', [AttachmentController::class, 'update']);
     Route::delete('/{id}', [AttachmentController::class, 'destroy']);
 });
-
-
-

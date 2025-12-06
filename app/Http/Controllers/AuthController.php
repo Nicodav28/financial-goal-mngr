@@ -18,35 +18,42 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        $user = $this->userService->validateLoginData($request->all());
+        try {
+            $user = $this->userService->validateLoginData($request->all());
 
-        if (!$user) {
-            return ResponseHandler::response(401, 'Auth:login', 'Invalid Credentials', null);
+            if (!$user) {
+                return ResponseHandler::response(401, 'Auth:login', 'Invalid Credentials', null);
+            }
+
+            $jwt = $this->jwtService->generateToken($user);
+
+            return ResponseHandler::response(200, 'Auth:login', null, null, [
+                'access_token' => $jwt,
+                'expires_in'   => CarbonInterval::hours(config('app.user_auth.jwt_validity_time'))->totalSeconds,
+                'token_type'   => 'Bearer',
+            ]);
+        } catch (\Exception $e) {
+            return ResponseHandler::response(500, 'Auth:login', 'Login failed', $e->getMessage());
         }
-
-        $jwt = $this->jwtService->generateToken($user);
-
-        return ResponseHandler::response(200, 'Auth:login', null, null, [
-            'access_token' => $jwt,
-            'expires_in'   => CarbonInterval::hours(config('app.user_auth.jwt_validity_time'))->totalSeconds,
-            'token_type'   => 'Bearer',
-        ]);
     }
 
     public function logout(Request $request)
     {
-        $this->jwtService->invalidateToken($request->attributes->get('auth_token'));
-
-        return ResponseHandler::response(200, 'Auth:logout', 'Logout successful', null);
+        try {
+            $this->jwtService->invalidateToken($request->attributes->get('auth_token'));
+            return ResponseHandler::response(200, 'Auth:logout', 'Logout successful', null);
+        } catch (\Exception $e) {
+            return ResponseHandler::response(500, 'Auth:logout', 'Logout failed', $e->getMessage());
+        }
     }
 
     public function forgotPassword(Request $request)
     {
-        return response()->json([ 'message' => 'Forgot password functionality not yet implemented' ], 501);
+        return ResponseHandler::response(501, 'Auth:forgotPassword', 'Forgot password functionality not yet implemented', null);
     }
 
     public function resetPassword(Request $request)
     {
-        return response()->json([ 'message' => 'Password reset functionality not yet implemented' ], 501);
+        return ResponseHandler::response(501, 'Auth:resetPassword', 'Password reset functionality not yet implemented', null);
     }
 }

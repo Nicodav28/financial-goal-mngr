@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\UserService;
+use App\Shared\ResponseHandler;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -16,9 +17,9 @@ class UserController extends Controller
     {
         try {
             $users = $this->userService->getAllUsers();
-            return response()->json($users, 200);
+            return ResponseHandler::response(200, 'User:index', null, null, $users);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Failed to retrieve users'], 500);
+            return ResponseHandler::response(500, 'User:index', 'Failed to retrieve users', $e->getMessage());
         }
     }
 
@@ -26,9 +27,12 @@ class UserController extends Controller
     {
         try {
             $user = $this->userService->getUserById($id);
-            return response()->json($user, 200);
+            if (!$user) {
+                return ResponseHandler::response(404, 'User:show', 'User not found', null);
+            }
+            return ResponseHandler::response(200, 'User:show', null, null, $user);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Failed to retrieve user'], 500);
+            return ResponseHandler::response(500, 'User:show', 'Failed to retrieve user', $e->getMessage());
         }
     }
 
@@ -36,11 +40,9 @@ class UserController extends Controller
     {
         try {
             $user = $this->userService->createUser($request->all());
-            return response()->json($user, 201);
+            return ResponseHandler::response(201, 'User:store', null, null, $user);
         } catch (\Exception $e) {
-            dd($e);
-
-            return response()->json(['error' => 'Failed to create user'], 500);
+            return ResponseHandler::response(500, 'User:store', 'Failed to create user', $e->getMessage());
         }
     }
 
@@ -48,9 +50,9 @@ class UserController extends Controller
     {
         try {
             $user = $this->userService->updateUser($id, $request->all());
-            return response()->json($user, 200);
+            return ResponseHandler::response(200, 'User:update', null, null, $user);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Failed to update user'], 500);
+            return ResponseHandler::response(500, 'User:update', 'Failed to update user', $e->getMessage());
         }
     }
 
@@ -58,9 +60,9 @@ class UserController extends Controller
     {
         try {
             $this->userService->deleteUser($id);
-            return response()->json(['message' => 'User deleted successfully'], 200);
+            return ResponseHandler::response(200, 'User:destroy', 'User deleted successfully', null);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Failed to delete user'], 500);
+            return ResponseHandler::response(500, 'User:destroy', 'Failed to delete user', $e->getMessage());
         }
     }
 }
